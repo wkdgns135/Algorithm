@@ -20,17 +20,15 @@ public :
         }
     }
 
-    void FindArea(vector<vector<int>> &map) {
-        for (vector<int> direction : directions) {
-            int offset = 1;
+    void FindArea(vector<vector<int>>& map) {
+        for (auto& direction : directions) {
             int xx = x, yy = y;
-            do {
-                if (map[yy][xx] == 6)break;
-                if(map[yy][xx] == 0)map[yy][xx] = 9;
-                xx = x + direction[1] * offset;
-                yy = y + direction[0] * offset;
-                offset++;
-            } while (xx < M && xx >= 0 && yy < N && yy >= 0);
+            while (true) {
+                xx += direction[1];
+                yy += direction[0];
+                if (xx < 0 || yy < 0 || xx >= M || yy >= N || map[yy][xx] == 6) break;
+                if (map[yy][xx] == 0) map[yy][xx] = 9;
+            }
         }
     }
 
