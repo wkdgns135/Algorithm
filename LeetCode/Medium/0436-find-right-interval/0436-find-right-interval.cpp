@@ -7,11 +7,7 @@ public:
         vector<int> answer(intervals.size());
         unordered_map<int, int> map;
         for (int i = 0; i < intervals.size(); i++)map[intervals[i][0]] = i;
-
-        sort(intervals.begin(), intervals.end(), [](vector<int> a, vector<int>b) {
-            return a[0] < b[0];
-            });
-
+        sort(intervals.begin(), intervals.end());
         for (int i = 0; i < intervals.size(); i++) {
             auto it = lower_bound(intervals.begin(), intervals.end(), intervals[i][1], [](const vector<int>& interval, int value) {
                     return value > interval[0];
@@ -25,7 +21,6 @@ public:
                 answer[map[intervals[i][0]]] = -1;
             }
         }
-
         return answer;
     }
 };
