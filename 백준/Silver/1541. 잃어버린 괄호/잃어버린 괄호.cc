@@ -26,15 +26,13 @@ int main() {
     int n = 0;
 
     for (int i = 2; i < v.size(); i += 2) {
-        if (v[i - 1] == "+") {
-            n += stoi(v[i - 2]);
-        }
-        else if (v[i - 1] == "-") {
-            n += stoi(v[i - 2]);
+        n += stoi(v[i - 2]);
+        if (v[i - 1] == "-") {
             nv.push_back(n);
             n = 0;
         }
     }
+
     for (int i = 1; i < nv.size(); i++) nv[0] -= nv[i];
     
     cout << nv[0];
