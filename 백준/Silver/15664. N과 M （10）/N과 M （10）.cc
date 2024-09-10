@@ -6,7 +6,7 @@ set<vector<int>> s;
 vector<bool> visited;
 void BackTracking(int depth, int index) {
     if (depth == m) {
-        s.insert(vector<int>(vv));
+        s.insert(vv);
         return;
     }
 
