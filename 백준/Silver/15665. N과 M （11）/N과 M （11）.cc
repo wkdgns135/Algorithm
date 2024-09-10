@@ -2,15 +2,15 @@
 using namespace std;
 int n, m;
 vector<int> v, vv;
-set<vector<int>> s;
 
 void BackTracking(int depth) {
     if (depth == m) {
-        s.insert(vv);
+        for (int& i : vv)cout << i << ' ';
+        cout << '\n';
         return;
     }
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < v.size(); i++) {
         vv[depth] = v[i];
         BackTracking(depth + 1);
     }
@@ -22,10 +22,6 @@ int main() {
     v = vector<int>(n), vv = vector<int>(m);
     for (int i = 0; i < n; i++)cin >> v[i];
     sort(v.begin(), v.end());
+    v.erase(unique(v.begin(), v.end()), v.end());
     BackTracking(0);
-    
-    for (auto &i : s) {
-        for (auto& j : i) cout << j << ' ';
-        cout << '\n';
-    }
 }
