@@ -20,8 +20,7 @@ int main() {
         int carry = 0;
         while (!a.empty()) {
             int n1 = a.back() - '0';
-            int n2 = a.back() - '0';
-            if (b.empty())n2++;
+            int n2 = a.back() - '0' + b.empty();
             a.pop_back();
             b.push_back((n1 + n2 + carry) % 10 + '0');
             carry = (n1 + n2 + carry) >= 10;
