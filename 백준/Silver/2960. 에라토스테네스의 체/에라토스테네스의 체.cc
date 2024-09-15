@@ -10,8 +10,7 @@ int main() {
         for (int j = i; j <= n; j += i) {
             if (!v[j])continue;
             v[j] = false;
-            k--;
-            if (!k)cout << j;
+            if (!--k)cout << j;
         }
     }
 }
