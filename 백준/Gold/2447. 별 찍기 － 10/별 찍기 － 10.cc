@@ -10,8 +10,8 @@ void DivideConquer(int n, int x, int y) {
 
     for (int i = 0; i < 9; i++) {
         if (i == 4)continue;
-        int xx = (i * n / 3) % n;
-        int yy = (i * n / 3) / n * n / 3;
+        int xx = (i % 3) * (n / 3);
+        int yy = (i / 3) * (n / 3);
         DivideConquer(n / 3, x + xx, y + yy);
     }
 }
