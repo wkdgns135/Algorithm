@@ -8,14 +8,11 @@ int main() {
     stack<pair<int, int>> s;
     for (int i = 0; i < n; i++) {
         int num; cin >> num;
-        if (s.empty() || s.top().first > num)s.push({ num, i });
-        else {
-            while (!s.empty() && s.top().first < num) {
-                v[s.top().second] = num;
-                s.pop();
-            }
-            s.push({num, i});
+        while (!s.empty() && s.top().first < num) {
+            v[s.top().second] = num;
+            s.pop();
         }
+        s.push({ num, i });
     }
     for (auto& i : v)cout << i << ' ';
 }
