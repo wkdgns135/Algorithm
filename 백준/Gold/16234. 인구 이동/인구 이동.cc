@@ -16,14 +16,14 @@ int main() {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (visited[i][j])continue;
-                stack<pair<int, int>> dfs;
+                queue<pair<int, int>> bfs;
                 vector<pair<int, int>> group;
                 group.push_back({ i, j });
-                dfs.push({ i, j });
+                bfs.push({ i, j });
                 visited[i][j] = true;
-                while (!dfs.empty()) {
-                    int x, y; tie(y, x) = dfs.top();
-                    dfs.pop();
+                while (!bfs.empty()) {
+                    int x, y; tie(y, x) = bfs.front();
+                    bfs.pop();
                     for (int k = 0; k < 4; k++) {
                         int xx = x + offset[k][0];
                         int yy = y + offset[k][1];
@@ -31,7 +31,7 @@ int main() {
                         int diff = abs(v[y][x] - v[yy][xx]);
                         if (diff >= l && diff <= r) {
                             visited[yy][xx] = true;
-                            dfs.push({ yy,xx });
+                            bfs.push({ yy,xx });
                             group.push_back({ yy, xx });
                         }
                    }
