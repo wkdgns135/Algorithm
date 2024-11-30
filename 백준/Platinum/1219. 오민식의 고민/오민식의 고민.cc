@@ -36,7 +36,6 @@ int main() {
     vector<long long> mdt(n, LLONG_MAX);
     mdt[s] = -values[s];
 
-    // 벨만-포드 알고리즘으로 최단 경로 구하기
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < m; j++) {
             int from = get<0>(edges[j]);
@@ -48,15 +47,11 @@ int main() {
         }
     }
 
-    // 음수 사이클 탐지
-    bool negativeCycleDetected = false;
     for (int j = 0; j < m; j++) {
         int from = get<0>(edges[j]);
         int to = get<1>(edges[j]);
         int cost = get<2>(edges[j]);
         if (mdt[from] != LLONG_MAX && mdt[to] > mdt[from] + cost - values[to]) {
-            // 음수 사이클 발견
-            negativeCycleDetected = true;
             if (bfs(n, graph, s, to) && bfs(n, graph, to, e)) {
                 cout << "Gee";
                 return 0;
