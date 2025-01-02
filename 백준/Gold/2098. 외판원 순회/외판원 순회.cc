@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int INF = INT_MAX;
+const int INF = 1000000 * 16;
 int main() {
     ios::sync_with_stdio(0); cin.tie(0);
     int n; cin >> n;
@@ -14,7 +14,7 @@ int main() {
         }
     }
 
-    vector<vector<long long>> dp(1 << n, vector<long long>(n, INF));
+    vector<vector<int>> dp(1 << n, vector<int>(n, INF));
     dp[1][0] = 0; // 시작점 초기화
 
     for (int mask = 0; mask < (1 << n); ++mask) {
@@ -27,7 +27,7 @@ int main() {
         }
     }
 
-    long long result = INF;
+    int result = INF;
     for (int i = 1; i < n; ++i) {
         result = min(result, dp[(1 << n) - 1][i] + cost[i][0]);
     }
