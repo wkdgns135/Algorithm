@@ -45,12 +45,11 @@ int main() {
         vector<int> dp(N + 1);
         for (int i = 1; i <= N; i++) {
             int node = sortedGraph[i - 1];
-            dp[node] = cost[node];
             int maxCost = 0;
             for (const int& ref : refGraph[node]) {
                 maxCost = max(maxCost, dp[ref]);
             }
-            dp[node] += maxCost;
+            dp[node] += maxCost + cost[node];
         }
 
         cout << dp[W] << '\n';
