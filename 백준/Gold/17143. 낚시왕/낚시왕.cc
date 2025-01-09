@@ -7,7 +7,6 @@ public:
     int speed;
     int direction;
     int size;
-    int offset[5][2] = { {},{-1,0},{1,0},{0,1},{0,-1} };
     Shark(int r, int c) {
         cin >> speed >> direction >> size;
         y = r;
