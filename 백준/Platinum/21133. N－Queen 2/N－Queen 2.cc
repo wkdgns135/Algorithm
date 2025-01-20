@@ -7,7 +7,7 @@ int main() {
    
     if (n % 6 == 2) {
         for (i = 2; i <= n; i += 2) cout << i << '\n';
-        cout << 1 << '\n' << 3 << '\n';
+        cout << 3 << '\n' << 1 << '\n';
         for (i = 7; i <= n; i += 2) cout << i << '\n';
         cout << 5 << '\n';
     }
