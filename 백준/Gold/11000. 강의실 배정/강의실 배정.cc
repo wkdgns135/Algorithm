@@ -9,10 +9,7 @@ int main() {
         cin >> v[i].first >> v[i].second;
     }
 
-    sort(v.begin(), v.end(), [](pair<int, int>& a, pair<int, int>& b) {
-        return a.first < b.first;
-        });
-    
+    sort(v.begin(), v.end());
     priority_queue<int, vector<int>, greater<int>> pq;
     pq.push(v[0].second);
     int answer = 1;
