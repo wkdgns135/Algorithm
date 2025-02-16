@@ -10,8 +10,7 @@ int main() {
     }
 
     sort(v.begin(), v.end(), [](pair<int, int>& a, pair<int, int>& b) {
-        if (a.first != b.first)return a.first < b.first;
-        return a.second > b.second;
+        return a.first < b.first;
         });
     
     priority_queue<int, vector<int>, greater<int>> pq;
