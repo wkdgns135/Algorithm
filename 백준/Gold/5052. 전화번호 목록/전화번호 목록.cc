@@ -40,9 +40,7 @@ bool TryTrie()
 {
     Trie root;
     int n; cin >> n;
-    string answer = "";
     vector<string> v(n);
-
     for (int i = 0; i < n; i++)
     {
         cin >> v[i];
