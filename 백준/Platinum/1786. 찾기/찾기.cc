@@ -5,7 +5,7 @@ vector<int> pi;
 void Kmp(string& pat)
 {
     int n = pat.size();
-    pi.resize(n, 0);  // 벡터 크기를 패턴 길이와 동일하게 조정
+    pi.resize(n, 0);
     int j = 0;
     for (int i = 1; i < n; i++)
     {
@@ -28,7 +28,6 @@ int main()
     getline(cin, str);
     getline(cin, pat);
 
-    // 접두사 함수 계산
     Kmp(pat);
 
     int n = str.size();
