@@ -34,7 +34,6 @@ int main()
             indegree[next]--;
             if (indegree[next] == 0)pq.push(next);
         }
-        graph[node].clear();
     }
     for (const int& node : answer)
     {
