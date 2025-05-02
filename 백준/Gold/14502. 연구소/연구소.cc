@@ -54,7 +54,7 @@ void BackTracking(int depth, int index = 0)
 		bool& isUsed = get<0>(targets[i]);
 		if (isUsed)continue;
 		isUsed = true;
-		BackTracking(depth + 1, i);
+		BackTracking(depth + 1, i + 1);
 		isUsed = false;
 	}
 }
