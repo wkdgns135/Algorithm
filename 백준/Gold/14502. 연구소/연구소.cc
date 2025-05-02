@@ -1,73 +1,79 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-int n, m, answer = 0;
-vector<vector<int>> v;
+vector<tuple<bool, int, int>> targets;
 vector<pair<int, int>> virus;
+vector<vector<int>> grid;
+vector<pair<int, int>> target;
 
-int Count() {
-    vector<vector<bool>> visited(n, vector<bool>(m));
-    int offset[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
-    int sum = 0;
+int n, m, answer = 0;
+int offset[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
 
-    for (int i = 0; i < n; i++) for (int j = 0; j < m; j++) visited[i][j] = v[i][j];
+int BFS()
+{
+	for (auto& [isUsed, y, x] : targets) grid[y][x] = isUsed;
+	queue<pair<int, int>> bfs;
+	for (auto& [y, x] : virus)bfs.push({ y, x });
+	while (!bfs.empty())
+	{
+		auto& [y, x] = bfs.front();
+		bfs.pop();
+		for (int i = 0; i < 4; i++)
+		{
+			int xx = x + offset[i][0];
+			int yy = y + offset[i][1];
 
-    for (auto& pos : virus) {
-        stack<pair<int, int>> dfs;
-        dfs.push({ pos.first, pos.second });
+			if (xx < 0 || xx >= m || yy < 0 || yy >= n || grid[yy][xx])continue;
+			bfs.push({ yy, xx });
+			grid[yy][xx] = 2;
+		}
+	}
 
-        while (!dfs.empty()) {
-            int x = dfs.top().second;
-            int y = dfs.top().first;
-            dfs.pop();
+	int result = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			result += grid[i][j] == 0;
+		}
+	}
 
-            for (int i = 0; i < 4; i++) {
-                int xx = x + offset[i][0];
-                int yy = y + offset[i][1];
-                if (xx >= 0 && xx < m && yy >= 0 && yy < n && !visited[yy][xx]) {
-                    visited[yy][xx] = true;
-                    dfs.push({ yy, xx });
-                }
-            }
-        }
-    }
-
-    for (auto& i : visited) sum += accumulate(i.begin(), i.end(), 0);
-    return n * m - sum;
+	return result;
 }
 
-void BackTracking(int depth) {
-    if (!depth) {
-        answer = max(answer, Count());
-        return;
-    }
+void BackTracking(int depth, int index = 0)
+{
+	if (depth == 3)
+	{
+		answer = max(answer, BFS());
+		return;
+	}
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            if (!v[i][j]) {
-                v[i][j] = 1;
-                BackTracking(depth - 1);
-                v[i][j] = 0;
-            }
-        }
-    }
+	for (int i = index; i < targets.size(); i++)
+	{
+		bool& isUsed = get<0>(targets[i]);
+		if (isUsed)continue;
+		isUsed = true;
+		BackTracking(depth + 1, i);
+		isUsed = false;
+	}
 }
 
-int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    cin >> n >> m;
-    v = vector<vector<int>>(n, vector<int>(m));
+int main()
+{
+	cin.tie(nullptr)->sync_with_stdio(false);
+	cin >> n >> m;
+	grid.resize(n, vector<int>(m));
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cin >> v[i][j];
-            if (v[i][j] == 2) {
-                virus.push_back({ i, j });
-                v[i][j] = 1;
-            }
-        }
-    }
-    BackTracking(3);
-
-    cout << answer;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cin >> grid[i][j];
+			if (grid[i][j] == 0)targets.push_back({ false, i,j });
+			else if (grid[i][j] == 2)virus.push_back({ i ,j });
+		}
+	}
+	BackTracking(0);
+	cout << answer;
 }
