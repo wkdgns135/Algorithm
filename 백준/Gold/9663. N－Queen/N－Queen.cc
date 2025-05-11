@@ -1,33 +1,46 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
-int N, C;
+int N, boards = 0;
+vector<bool> colUsed, leftDiagUsed, rightDiagUsed;
 
-void BackTracking(int row, vector<bool>& cols, vector<bool>& diag1, vector<bool>& diag2) {
-    if (row == N) {
-        C++;
+void Backtrack(int row)
+{
+    if (row == N)
+    {
+        boards++;
         return;
     }
 
-    for (int col = 0; col < N; col++) {
-        if (cols[col] || diag1[row + col] || diag2[row - col + N - 1])continue;
-        cols[col] = diag1[row + col] = diag2[row - col + N - 1] = true;
-        BackTracking(row + 1, cols, diag1, diag2);
-        cols[col] = diag1[row + col] = diag2[row - col + N - 1] = false;
+    for (int col = 0; col < N; ++col)
+    {
+        // 좌측 대각선의 인덱스는 (row + col)
+        // 우측 대각선의 인덱스는 (row - col + N - 1)
+        if (!colUsed[col] && !leftDiagUsed[row + col] && !rightDiagUsed[row - col + N - 1])
+        {
+            colUsed[col] = true;
+            leftDiagUsed[row + col] = true;
+            rightDiagUsed[row - col + N - 1] = true;
+
+            Backtrack(row + 1);
+
+            // 백트래킹
+            colUsed[col] = false;
+            leftDiagUsed[row + col] = false;
+            rightDiagUsed[row - col + N - 1] = false;
+        }
     }
 }
 
-int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-
+int main()
+{
     cin >> N;
+    colUsed.resize(N, false);
+    leftDiagUsed.resize(2 * N - 1, false);
+    rightDiagUsed.resize(2 * N - 1, false);
 
-    vector<bool> cols(N, false); 
-    vector<bool> diag1(2 * N - 1, false);
-    vector<bool> diag2(2 * N - 1, false); 
-
-    BackTracking(0, cols, diag1, diag2);
-
-    cout << C;
+    Backtrack(0);
+    cout << boards;
+    return 0;
 }
