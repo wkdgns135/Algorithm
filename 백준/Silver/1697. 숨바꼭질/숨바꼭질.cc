@@ -1,36 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define MAX_SIZE 100001
-int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    int n, k; cin >> n >> k;
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    
-    vector<pair<int, bool>> mdt(MAX_SIZE, { INT_MAX, false });
-    mdt[n].first = 0;
-    pq.push({ 0, n });
 
-    while (!pq.empty()) {
-        int cost = pq.top().first;
-        int index = pq.top().second;
-        pq.pop();
-        if (mdt[index].second)continue;
-        if (index == k)break;
-        mdt[index].second = true;
-
-        if (index - 1 >= 0 && mdt[index - 1].first > cost + 1) {
-            mdt[index - 1].first = cost + 1;
-            pq.push({ cost + 1 , index - 1 });
-        }
-        if (index + 1 < MAX_SIZE && mdt[index + 1].first > cost + 1) {
-            mdt[index + 1].first = cost + 1;
-            pq.push({ cost + 1 , index + 1 });
-        }
-        if (index * 2 < MAX_SIZE && mdt[index * 2].first > cost + 1) {
-            mdt[index * 2].first = cost + 1;
-            pq.push({ cost + 1, index * 2});
-        }
-    }
-
-    cout << mdt[k].first;
+int main()
+{
+	cin.tie(0)->sync_with_stdio(0);
+	constexpr int SIZE = 110000;
+	int n, k; cin >> n >> k;
+	queue<int> bfs;
+	bfs.push(n);
+	vector<int> mdt(SIZE, INT_MAX);
+	mdt[n] = 0;
+	while (!bfs.empty())
+	{
+		int node = bfs.front();
+		bfs.pop();
+		if (node == k)break;
+		if (node + 1 < SIZE && mdt[node + 1] > mdt[node] + 1)
+		{
+			bfs.push(node + 1);
+			mdt[node + 1] = mdt[node] + 1;
+		}
+		if (node - 1 >= 0 && mdt[node - 1] > mdt[node] + 1)
+		{
+			bfs.push(node - 1);
+			mdt[node - 1] = mdt[node] + 1;
+		}
+		if (node * 2 < SIZE && mdt[node * 2] > mdt[node] + 1)
+		{
+			bfs.push(node * 2);
+			mdt[node * 2] = mdt[node] + 1;
+		}
+	}
+	cout << mdt[k];
 }
