@@ -20,6 +20,11 @@ int main()
 	{
 		int left = 0, right = n - 1;
 		bool result = 0;
+		if (v1[left] == num || v1[right] == num)
+		{
+			cout << 1 << ' ';
+			continue;
+		}
 		while (left <= right)
 		{
 			int mid = (left + right) / 2;
