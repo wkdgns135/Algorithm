@@ -1,24 +1,77 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-    ios_base::sync_with_stdio(false);cin.tie(NULL); cout.tie(NULL);
+struct Num
+{
+	int num;
+	bool deleted;
+};
 
-    int t; cin >> t;
-    while (t--) {
-        int k; cin >> k;
-        multiset<int> ms;
+struct NumCmpMax
+{
+	bool operator()(const Num* a, const Num* b) const
+	{
+		return a->num < b->num;
+	}
+};
+struct NumCmpMin
+{
+	bool operator()(const Num* a, const Num* b) const
+	{
+		return a->num > b->num;
+	}
+};
 
-        while (k--) {
-            char c; cin >> c;
-            int n; cin >> n;
-            if (c == 'I') ms.insert(n);
-            else if (!ms.empty()) {
-                if (n == 1) ms.erase(--ms.end());
-                else ms.erase(ms.begin());
-            }
-        }
-        if (ms.empty())  cout << "EMPTY" << '\n';
-        else  cout << *(--ms.end()) << ' ' << *(ms.begin()) << '\n';
-    }
+int main()
+{
+	cin.tie(0)->sync_with_stdio(0);
+
+	int t; cin >> t;
+	while (t--)
+	{
+		int k; cin >> k;
+		priority_queue <Num*, vector<Num*>, NumCmpMax> maxHeap;
+		priority_queue <Num*, vector<Num*>, NumCmpMin> minHeap;
+
+		for (int i = 0; i < k; i++)
+		{
+			char d;
+			int n;
+			cin >> d >> n;
+			if (d == 'I')
+			{
+				Num* newNum = new Num();
+				newNum->num = n;
+
+				maxHeap.push(newNum);
+				minHeap.push(newNum);
+			}
+			else if (n == 1)
+			{
+				while (!maxHeap.empty() && maxHeap.top()->deleted) maxHeap.pop();
+
+				if (!maxHeap.empty())
+				{
+					maxHeap.top()->deleted = true;
+					maxHeap.pop();
+				}
+			}
+			else
+			{
+				while (!minHeap.empty() && minHeap.top()->deleted) minHeap.pop();
+
+				if (!minHeap.empty())
+				{
+					minHeap.top()->deleted = true;
+					minHeap.pop();
+				}
+			}
+		}
+
+		while (!maxHeap.empty() && maxHeap.top()->deleted) maxHeap.pop();
+		while (!minHeap.empty() && minHeap.top()->deleted) minHeap.pop();
+
+		if (maxHeap.empty()) cout << "EMPTY" << '\n';
+		else cout << maxHeap.top()->num << ' ' << minHeap.top()->num << '\n';
+	}
 }
