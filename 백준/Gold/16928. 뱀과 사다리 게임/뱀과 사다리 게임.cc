@@ -6,13 +6,12 @@ int main()
 	cin.tie(0)->sync_with_stdio(0);
 	int n, m; cin >> n >> m;
 
-	vector<int> graph(100, -1), visited(100, INT_MAX);
+	vector<int> graph(100), visited(100, INT_MAX);
 
 	for (int i = 0; i < n + m; i++)
 	{
 		int a, b; cin >> a >> b;
-		a--, b--;
-		graph[a] = b;
+		graph[a - 1] = b - 1;
 	}
 
 	queue<int> bfs;
@@ -31,7 +30,7 @@ int main()
 		}
 		for (int i = node + 1; i <= node + 6 && i < 100; i++)
 		{
-			int next = graph[i] == -1 ? i : graph[i];
+			int next = graph[i] ? graph[i] : i;
 			if (visited[next] > visited[node] + 1)
 			{
 				visited[next] = visited[node] + 1;
