@@ -2,7 +2,6 @@
 using namespace std;
 
 vector<pair<int, int>> house, chicken, temp;
-vector<bool> visited;
 int m, answer = INT_MAX;
 
 int Calc()
@@ -31,12 +30,8 @@ void BT(int depth, int index)
 
 	for (int i = index; i < chicken.size(); i++)
 	{
-		if (visited[i]) continue;
-
 		temp[depth] = chicken[i];
-		visited[i] = true;
-		BT(depth + 1, i);
-		visited[i] = false;
+		BT(depth + 1, i + 1);
 	}
 }
 
@@ -54,7 +49,6 @@ int main()
 			else if (input == 2) chicken.push_back({ i, j });
 		}
 	}
-	visited.resize(chicken.size());
 	temp.resize(m);
 
 	BT(0, 0);
