@@ -1,36 +1,54 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-	ios::sync_with_stdio(0); cin.tie(0);
+int main()
+{
+	cin.tie(0)->sync_with_stdio(0);
 	int n; cin >> n;
-	vector<vector<bool>> v(n, vector<bool>(n));
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			int input; cin >> input;
-			v[i][j] = input;
+
+	vector<vector<int>> v(n, vector<int>(n));
+	vector<vector<vector<int>>> dp(3, vector<vector<int>>(n, vector<int>(n)));
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> v[i][j];
 		}
 	}
-	int offset[3][3][2] = { { {0,1},{1,1},{0,0} },{ {0,1},{1,1},{1,0} },{{0,0},{1,1},{1,0}} };
-	// type 0: {0,1}, {1,1}
-	// type 1: {0,1}, {1,1}, {1,0}
-	// type 2: {1,0}, {1,1}
-	vector<vector<int>> dp(n, vector<int>(n));
-	queue<tuple<int, int, int>> bfs;
-	dp[0][1] = 1;
-	bfs.push({ 0, 1, 0});
-	while (!bfs.empty()) {
-		int x, y, type; tie(y, x, type) = bfs.front();
-		bfs.pop();
-		for (int i = 0; i < 3; i++) {
-			int xx = x + offset[type][i][1];
-			int yy = y + offset[type][i][0];
-			if (xx == x && yy == y)continue;
-			if (xx < 0 || xx >= n || yy < 0 || yy >= n || v[yy][xx])continue;
-			if (i == 1 && (v[yy][xx - 1] || v[yy - 1][xx]))continue;
-			dp[yy][xx]++;
-			bfs.push({ yy, xx, i });
+
+	for (int i = 1; i < n; i++)
+	{
+		if (v[0][i]) break;
+		dp[0][0][i] = 1;
+	}
+
+	for (int i = 1; i < n; i++)
+	{
+		for (int j = 1; j < n; j++)
+		{
+			if (v[i][j]) continue;
+
+			if (!v[i][j - 1])
+			{
+				dp[0][i][j] += dp[0][i][j - 1];
+				dp[0][i][j] += dp[1][i][j - 1];
+			}
+
+			if (!v[i - 1][j - 1] && !v[i - 1][j] && !v[i][j - 1])
+			{
+				dp[1][i][j] += dp[0][i - 1][j - 1];
+				dp[1][i][j] += dp[1][i - 1][j - 1];
+				dp[1][i][j] += dp[2][i - 1][j - 1];
+			}
+
+			if (!v[i - 1][j])
+			{
+				dp[2][i][j] += dp[1][i - 1][j];
+				dp[2][i][j] += dp[2][i - 1][j];
+			}
 		}
 	}
-	cout << dp[n - 1][n - 1];
+
+	cout << dp[0][n - 1][n - 1] + dp[1][n - 1][n - 1] + dp[2][n - 1][n - 1];
 }
