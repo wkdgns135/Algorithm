@@ -1,47 +1,62 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
+
+vector<pair<int, int>> house, chicken, temp;
+vector<bool> visited;
 int m, answer = INT_MAX;
-vector<pair<int, int>> houses, chickens, remainChickens;
 
-int Distance(pair<int, int> a, pair<int, int> b) {
-    return abs(a.first - b.first) + abs(a.second - b.second);
+int Calc()
+{
+	int sum = 0;
+	for (auto& [y1, x1] : house)
+	{
+		int minVal = INT_MAX;
+		for (int i = 0; i < m; i++)
+		{
+			auto& [y2, x2] = temp[i];
+			minVal = min(abs(y1 - y2) + abs(x1 - x2), minVal);
+		}
+		sum += minVal;
+	}
+	return sum;
 }
 
-int Calc() {
-    int sum = 0;
-    for (auto house : houses) {
-        int minVal = INT_MAX;
-        for (auto chicken : remainChickens) {
-            minVal = min(minVal, Distance(house, chicken));
-        }
-        sum += minVal;
-    }
-    return sum;
+void BT(int depth, int index)
+{
+	if (depth == m)
+	{
+		answer = min(answer, Calc());
+		return;
+	}
+
+	for (int i = index; i < chicken.size(); i++)
+	{
+		if (visited[i]) continue;
+
+		temp[depth] = chicken[i];
+		visited[i] = true;
+		BT(depth + 1, i);
+		visited[i] = false;
+	}
 }
 
-void BackTracking(int depth, int index) {
-    if (m == depth) {
-        answer = min(answer, Calc());
-        return;
-    }
+int main()
+{
+	cin.tie(0)->sync_with_stdio(0);
+	int n; cin >> n >> m;
 
-    for (int i = index; i < chickens.size(); i++) {
-        remainChickens[depth] = chickens[i];
-        BackTracking(depth + 1, i + 1);
-    }
-}
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			int input; cin >> input;
+			if (input == 1) house.push_back({ i, j });
+			else if (input == 2) chicken.push_back({ i, j });
+		}
+	}
+	visited.resize(chicken.size());
+	temp.resize(m);
 
-int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    int n; cin >> n >> m;
-    remainChickens = vector<pair<int, int>>(m);
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            int input; cin >> input;
-            if (input == 1)houses.push_back({ i,j });
-            if (input == 2)chickens.push_back({ i,j });
-        }
-    }
-    BackTracking(0, 0);
-    cout << answer;
+	BT(0, 0);
+	cout << answer;
 }
