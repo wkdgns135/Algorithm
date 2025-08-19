@@ -1,72 +1,77 @@
 #include <string>
 #include <vector>
-#include <unordered_set>
-#include <algorithm>
+#include <map>
+#include <queue>
+#include <set>
+
 using namespace std;
 
-// cols(선택된 컬럼 인덱스들)로 각 행을 묶었을 때 유일성 검사
-static bool isUnique(const vector<vector<string>>& relation, const vector<int>& cols) {
-    unordered_set<string> seen;
-    seen.reserve(relation.size() * 2);
+vector<bool> temp;
 
-    for (const auto& row : relation) {
-        string key;
-        key.reserve(cols.size() * 16);
-        for (int c : cols) {
-            key += row[c];
-            key += '\x1f'; // 구분자(UNIT SEPARATOR)
-        }
-        if (!seen.insert(key).second) return false; // 중복 발생 → 유일성 실패
-    }
-    return true;
+bool check1(vector<vector<string>>& relation)
+{
+	map<vector<string>, bool> um;
+	for (int i = 0; i < relation.size(); i++)
+	{
+		vector<string> v;
+		for (int j = 0; j < relation[i].size(); j++)
+		{
+			if (temp[j]) v.push_back(relation[i][j]);
+		}
+		if (um[v]) return false;
+		else um[v] = true;
+	}
+
+	return true;
 }
 
-// 현재 조합(cur)에 대해, 이미 찾은 후보키들(keys)이 부분집합이면 최소성 실패
-static bool isMinimal(const vector<int>& cur, const vector<vector<int>>& keys) {
-    for (const auto& key : keys) {
-        bool subset = true;
-        // key ⊆ cur ?
-        for (int k : key) {
-            if (!binary_search(cur.begin(), cur.end(), k)) { // cur은 정렬되어 있음
-                subset = false;
-                break;
-            }
-        }
-        if (subset) return false;
-    }
-    return true;
+bool check2(set<int>& bitmask)
+{
+	int curMask = 0;
+	for (int i = 0; i < temp.size(); i++)
+		if (temp[i]) curMask |= (1 << i);
+
+	for (int bit : bitmask)
+	{
+		if ((curMask & bit) == bit && bit != 0)
+			return false;
+	}
+	bitmask.insert(curMask);
+	return true;
 }
 
-// 크기 고정 조합 생성(dfs): start부터 남은 left개를 더 뽑아 cur을 완성
-static void dfs(const vector<vector<string>>& relation,
-                int start, int left, vector<int>& cur,
-                vector<vector<int>>& candidateKeys, int& answer) {
-    if (left == 0) {
-        // 유일성 → 최소성
-        if (isUnique(relation, cur) && isMinimal(cur, candidateKeys)) {
-            candidateKeys.push_back(cur);
-            answer++;
-        }
-        return;
-    }
-    const int m = relation[0].size();
-    // 가지치기: i는 남은 칸으로 left개를 채울 수 있어야 함
-    for (int i = start; i <= m - left; ++i) {
-        cur.push_back(i);
-        dfs(relation, i + 1, left - 1, cur, candidateKeys, answer);
-        cur.pop_back();
-    }
-}
+int solution(vector<vector<string>> relation)
+{
+	int colSize = relation[0].size();
+	temp.assign(colSize, false);
 
-int solution(vector<vector<string>> relation) {
-    const int m = relation[0].size();
-    vector<vector<int>> candidateKeys; // 이미 확정된 후보키(인덱스 조합)
-    vector<int> cur;
-    int answer = 0;
+	int answer = 0;
 
-    // 크기 1 → m 순서로 전수조사
-    for (int size = 1; size <= m; ++size) {
-        dfs(relation, 0, size, cur, candidateKeys, answer);
-    }
-    return answer;
+	set<int> bitmask;
+	queue<pair<vector<bool>, int>> q;
+	q.push({ temp, 0 });
+
+	while (!q.empty())
+	{
+		auto [cur, idx] = q.front();
+		q.pop();
+
+		temp = cur;
+		if (check1(relation) && check2(bitmask))
+		{
+			answer++;
+			continue;
+		}
+
+		for (int i = idx; i < colSize; i++)
+		{
+			if (!cur[i])
+			{
+				auto next = cur;
+				next[i] = true;
+				q.push({ next, i + 1 });
+			}
+		}
+	}
+	return answer;
 }
