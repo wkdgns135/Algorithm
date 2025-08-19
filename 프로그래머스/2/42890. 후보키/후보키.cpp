@@ -2,7 +2,6 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include <set>
 
 using namespace std;
 
@@ -25,7 +24,7 @@ bool check1(vector<vector<string>>& relation)
 	return true;
 }
 
-bool check2(set<int>& bitmask)
+bool check2(vector<int>& bitmask)
 {
 	int curMask = 0;
 	for (int i = 0; i < temp.size(); i++)
@@ -36,7 +35,7 @@ bool check2(set<int>& bitmask)
 		if ((curMask & bit) == bit && bit != 0)
 			return false;
 	}
-	bitmask.insert(curMask);
+	bitmask.push_back(curMask);
 	return true;
 }
 
@@ -47,7 +46,7 @@ int solution(vector<vector<string>> relation)
 
 	int answer = 0;
 
-	set<int> bitmask;
+	vector<int> bitmask;
 	queue<pair<vector<bool>, int>> q;
 	q.push({ temp, 0 });
 
