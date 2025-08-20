@@ -1,21 +1,24 @@
-#include <bits/stdc++.h>
+#include <vector>
+#include <iostream>
+#include <set>
+#include <algorithm>
 using namespace std;
 
-int main() {
-    ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
-    int n; cin >> n;
-    vector<int> v;
-    vector<int> vv;
-    unordered_map<int, int> map;
-    for (int i = 0; i < n; i++) {
-        int input; cin >> input;
-        v.push_back(input);
-        vv.push_back(input);
-    }
+int main()
+{
+	cin.tie(0)->sync_with_stdio(0);
+	int n; cin >> n;
 
-    sort(v.begin(), v.end());
-    v.erase(unique(v.begin(), v.end()), v.end());
+	vector<int> v1(n), v2(n);
 
-    for (int i = 0; i < v.size(); i++) map[v[i]] = i + 1;
-    for (int i = 0; i < n; i++) cout << map[vv[i]] - 1 << ' ';
+	for (int i = 0; i < n; i++)
+	{
+		cin >> v1[i];
+		v2[i] = v1[i];
+	}
+
+	sort(v1.begin(), v1.end());
+	v1.erase(unique(v1.begin(), v1.end()), v1.end());
+
+	for (int i : v2) cout << lower_bound(v1.begin(), v1.end(), i) - v1.begin() << ' ';
 }
