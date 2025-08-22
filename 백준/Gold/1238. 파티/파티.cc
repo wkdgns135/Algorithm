@@ -1,41 +1,53 @@
-#include <bits/stdc++.h>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <limits.h>
 using namespace std;
 
-int n, m, x; 
-int FindShortcut(vector<vector<pair<int, int>>> &v, int start, int end) {
-	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-	vector<int> mdt(n, INT_MAX);
-	
-	pq.push({ 0, start });
+void short_cut(vector<int>& mdt, vector<vector<pair<int, int>>>& graph, int start)
+{
+	priority_queue <pair<int, int>, vector<pair<int, int>>, greater<>> pq;
 	mdt[start] = 0;
-
-	while (!pq.empty()) {
-		int cost = pq.top().first;
-		int node = pq.top().second;
+	pq.push({ 0, start });
+	while (!pq.empty())
+	{
+		auto [cost, node] = pq.top();
 		pq.pop();
-		if (cost != mdt[node])continue;
-		for (auto &edge : v[node]) {
-			if (mdt[edge.first] > edge.second + cost) {
-				mdt[edge.first] = edge.second + cost;
-				pq.push({ mdt[edge.first], edge.first });
+
+		if (mdt[node] != cost) continue;
+
+		for (auto [nextNode, nextCost] : graph[node])
+		{
+			if (mdt[nextNode] > nextCost + cost)
+			{
+				mdt[nextNode] = nextCost + cost;
+				pq.push({ mdt[nextNode], nextNode });
 			}
 		}
 	}
-	return mdt[end];
 }
 
-int main() {
-	cin >> n >> m >> x; x--;
-	vector<vector<pair<int, int>>> v(n);
-	for (int i = 0; i < m; i++) {
+int main()
+{
+	cin.tie(0)->sync_with_stdio(0);
+	int n, m, x; cin >> n >> m >> x;
+
+	vector<vector<pair<int, int>>> graph(n);
+	for (int i = 0; i < m; i++)
+	{
 		int a, b, c; cin >> a >> b >> c;
-		a--, b--;
-		v[a].push_back({ b, c });
+		graph[a - 1].push_back({ b - 1, c });
 	}
+	x--;
+	vector<int> x2other(n, INT_MAX);
+	short_cut(x2other, graph, x);
 	int answer = 0;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++)
+	{
 		if (i == x)continue;
-		answer = max(FindShortcut(v, i, x) + FindShortcut(v, x, i), answer);
+		vector<int> result(n, INT_MAX);
+		short_cut(result, graph, i);
+		answer = max(answer, result[x] + x2other[i]);
 	}
 	cout << answer;
 }
