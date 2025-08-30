@@ -54,27 +54,17 @@ int main()
 		}
 	}
 
-	for (auto& row : v)
-	{
-		for (int idx : row)
-		{
-			if (truth[idx] || truth[parent[idx]])
-			{
-				truth[Find(idx)] = true;
-			}
-		}
-	}
+    for (int i = 1; i <= n; i++) if (truth[i]) truth[Find(i)] = 1;
 
-	for (auto& row : v)
-	{
-		for (int i : row)
-		{
-			if (truth[i] || truth[Find(i)])
-			{
-				m--; break;
-			}
-		}
-	}
-
+    for (auto& row : v)
+    {
+        for (int i : row)
+        {
+            if (truth[Find(i)])
+            {
+                m--; break;
+            }
+        }
+    }
 	cout << m;
 }
