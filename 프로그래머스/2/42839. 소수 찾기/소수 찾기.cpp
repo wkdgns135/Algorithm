@@ -1,38 +1,45 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int SIZE = 10000000;
-bool primeNums[SIZE];
-int answer = 0;
+vector<bool> isPrime, used;
+int answer, len;
+string s;
 
-void bt(string &numbers, vector<bool> &visited, string &s, int depth){
-    if(!primeNums[stoi(s)]){
-        cout << s << ' ';
-        primeNums[stoi(s)] = true;
+void CalcPrime(int n)
+{
+	isPrime.resize(n, true);
+    isPrime[0] = false, isPrime[1] = false;
+	for (int i = 2; i < sqrt(n); i++)
+	{
+		if (!isPrime[i]) continue;
+		for (int j = i + i; j < n; j += i) isPrime[j] = false;
+	}
+}
+
+void BT(int depth, string &number){
+    if(!s.empty() && isPrime[stoi(s)]){
+        isPrime[stoi(s)] = false;
         answer++;
     }
-    if(depth == -1)return;
-    for(int i = 0; i < numbers.size(); i++){
-        if(visited[i])continue;
-        visited[i] = true;
-        s[depth] = numbers[i];
-        bt(numbers, visited, s, depth - 1);
-        visited[i] = false;
-        s[depth] = '0';
+    if(depth == len) return;
+    
+    for(int i = 0; i < len; i++){
+        if(used[i]) continue;
+        used[i] = true;
+        s.push_back(number[i]);
+        BT(depth + 1, number);
+        s.pop_back();
+        used[i] = false;
     }
 }
 
-int solution(string numbers) {
-    int n = numbers.size();
-    primeNums[0] = true, primeNums[1] = true;
-    for(int i = 2; i <= sqrt(SIZE); i++){
-        if(primeNums[i])continue;
-        for(int j = i * 2; j < SIZE; j += i){
-            primeNums[j] = true;
-        }
-    }
-    vector<bool> visited(n);
-    string s(n, '0');
-    bt(numbers, visited, s, n - 1);
-    return answer;
+int solution(string numbers)
+{
+	sort(numbers.begin(), numbers.end(), greater<>());
+    len = numbers.size();
+    used.resize(len);
+	CalcPrime(stoi(numbers) + 1);
+    BT(0, numbers);
+    
+	return answer;
 }
