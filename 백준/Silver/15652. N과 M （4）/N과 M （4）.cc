@@ -1,22 +1,30 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int N, M;
-void BackTracking(vector<int> v, int n) {
-	if (n == M) { for (int i = 0; i < M; i++)cout << v[i] << " "; cout << "\n"; return; }
-	for (int i = 0; i < N; i++) {
-		if (n > 0 && v[n - 1] > i + 1)continue;
-		v[n] = i + 1;
-		BackTracking(v, n + 1);
+int n, m;
+vector<int> v;
+
+void bt(int depth, int index)
+{
+	if (depth == m)
+	{
+		for (int& i : v) cout << i << ' ';
+		cout << '\n';
+		return;
+	}
+
+	for (int i = index; i < n; i++)
+	{
+		v[depth] = i + 1;
+		bt(depth + 1, i);
 	}
 }
 
 int main()
 {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	cin >> N >> M;
+	cin.tie(0)->sync_with_stdio(0);
 
-	vector<int> v(M, 0);
-	BackTracking(v, 0);
+	cin >> n >> m;
+	v.resize(m);
+	bt(0, 0);
 }
