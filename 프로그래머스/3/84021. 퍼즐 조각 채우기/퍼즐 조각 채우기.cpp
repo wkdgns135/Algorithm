@@ -25,6 +25,15 @@ void NormalizePiece(vector<pair<int, int>>& piece)
 	sort(piece.begin(), piece.end());
 }
 
+void RotatePiece(vector<pair<int, int>>& piece){
+    for (auto& i : piece)
+    {
+        auto& [y, x] = i;
+        swap(y, x);
+        x = -x;
+    }
+}
+
 vector<vector<pair<int, int>>> FindPieces(vector<vector<int>>& map, bool flag)
 {
 	vector < vector<pair<int, int>>> pieces;
@@ -84,59 +93,18 @@ int solution(vector<vector<int>> game_board, vector<vector<int>> table)
 		{
 			if (tablePiece.size() != boardPieces[i].size() || boardUsed[i]) continue;
 
-			vector<pair<int, int>> tmp = tablePiece;
-			NormalizePiece(tmp);
-			if (tmp == boardPieces[i])
-			{
-				answer += tmp.size();
-				boardUsed[i] = true;
-				break;
-			}
-
-			tmp = tablePiece;
-			for (auto& piece : tmp)
-			{
-				auto& [y, x] = piece;
-				swap(y, x);
-				y = -y;
-			}
-			NormalizePiece(tmp);
-			if (tmp == boardPieces[i])
-			{
-				answer += tmp.size();
-				boardUsed[i] = true;
-				break;
-			}
-
-			tmp = tablePiece;
-			for (auto& piece : tmp)
-			{
-				auto& [y, x] = piece;
-				y = -y;
-				x = -x;
-			}
-			NormalizePiece(tmp);
-			if (tmp == boardPieces[i])
-			{
-				answer += tmp.size();
-				boardUsed[i] = true;
-				break;
-			}
-
-			tmp = tablePiece;
-			for (auto& piece : tmp)
-			{
-				auto& [y, x] = piece;
-				swap(y, x);
-				x = -x;
-			}
-			NormalizePiece(tmp);
-			if (tmp == boardPieces[i])
-			{
-				answer += tmp.size();
-				boardUsed[i] = true;
-				break;
-			}
+            vector<pair<int, int>> tmp = tablePiece;
+            for(int j = 0; j < 4; j++){
+                NormalizePiece(tmp);
+                if (tmp == boardPieces[i])
+                {
+                    answer += tmp.size();
+                    boardUsed[i] = true;
+                    break;
+                }
+                RotatePiece(tmp);
+            }
+            if(boardUsed[i]) break;
 		}
 	}
 	return answer;
