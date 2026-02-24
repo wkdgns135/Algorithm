@@ -92,17 +92,16 @@ int solution(vector<vector<int>> game_board, vector<vector<int>> table)
 		for (int i = 0; i < boardPieces.size(); i++)
 		{
 			if (tablePiece.size() != boardPieces[i].size() || boardUsed[i]) continue;
-
-            vector<pair<int, int>> tmp = tablePiece;
+            
             for(int j = 0; j < 4; j++){
-                NormalizePiece(tmp);
-                if (tmp == boardPieces[i])
+                NormalizePiece(tablePiece);
+                if (tablePiece == boardPieces[i])
                 {
-                    answer += tmp.size();
+                    answer += tablePiece.size();
                     boardUsed[i] = true;
                     break;
                 }
-                RotatePiece(tmp);
+                RotatePiece(tablePiece);
             }
             if(boardUsed[i]) break;
 		}
