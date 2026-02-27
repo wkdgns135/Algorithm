@@ -6,7 +6,6 @@ using namespace std;
 int solution(vector<vector<int>> data, int col, int row_begin, int row_end)
 {
 	int answer = 0;
-	vector<int> s(data.size());
 
 	sort(data.begin(), data.end(), [col](const vector<int>& a, const vector<int>& b)
 		{
