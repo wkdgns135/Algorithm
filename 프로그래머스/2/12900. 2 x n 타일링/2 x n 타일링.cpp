@@ -1,15 +1,10 @@
-#include <vector>
-
-using namespace std;
-
 int solution(int n) {
-    vector<int> dp(n + 1);
-    dp[1] = 1, dp[2] = 2;
+    int answer = 3, pre_1 = 2, pre_2 = 1;
+    if(n < 4) return n;
     for(int i = 3; i <= n; i++){
-        dp[i] = dp[i - 1] + dp[i - 2];
-        dp[i] %= 1000000007;
+        answer = (pre_1 + pre_2) % 1000000007;
+        pre_2 = pre_1;
+        pre_1 = answer;
     }
-    return dp[n];
+    return answer;
 }
-
-// 1 2 3 5
