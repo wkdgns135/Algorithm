@@ -55,6 +55,7 @@ void postorder(Node *node, vector<vector<int>> &answer){
     if(node->left)postorder(node->left, answer);
     if(node->right)postorder(node->right, answer);
     answer[1].push_back(node->n);
+    delete node;
 }
 
 vector<vector<int>> solution(vector<vector<int>> nodeinfo) {
@@ -73,5 +74,6 @@ vector<vector<int>> solution(vector<vector<int>> nodeinfo) {
     
     preorder(parent, answer);
     postorder(parent, answer);
+    
     return answer;
 }
