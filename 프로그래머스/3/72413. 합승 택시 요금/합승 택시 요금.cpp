@@ -5,9 +5,7 @@
 
 using namespace std;
 
-int answer = INT_MAX;
-
-int search(vector<vector<pair<int, int>>>& graph, int start, int end)
+vector<int> search(vector<vector<pair<int, int>>>& graph, int start)
 {
     vector<int> mdt(graph.size(), INT_MAX);
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> heap;
@@ -19,7 +17,6 @@ int search(vector<vector<pair<int, int>>>& graph, int start, int end)
         heap.pop();
         
         if(mdt[node] != cost) continue;
-        if(node == end) break;
         
         for(auto [nextNode, nextCost] : graph[node]){
             if(mdt[nextNode] > cost + nextCost){
@@ -29,7 +26,7 @@ int search(vector<vector<pair<int, int>>>& graph, int start, int end)
         }
     }
 
-    return mdt[end];
+    return mdt;
 }
 
 int solution(int n, int s, int a, int b, vector<vector<int>> fares)
@@ -42,30 +39,18 @@ int solution(int n, int s, int a, int b, vector<vector<int>> fares)
         graph[fare[0]].push_back({ fare[1], fare[2] });
         graph[fare[1]].push_back({ fare[0], fare[2] });
     }
-
-    queue<int> bfs;
-    vector<int> mdt(graph.size(), INT_MAX);
-    bfs.push(s);
-    mdt[s] = 0;
     
-    while(!bfs.empty()){
-        int node = bfs.front();
-        bfs.pop();
-        
-        if(answer > mdt[node]){
-            int A = search(graph, node, a);
-            if(answer > mdt[node] + A){
-                int B = search(graph, node, b);
-                if(answer > mdt[node] + A + B)answer = mdt[node] + A + B;
-            }
+    vector<vector<int>> mdts(3);
+    mdts[0] = search(graph, s);
+    mdts[1] = search(graph, a);
+    mdts[2] = search(graph, b);
+    
+    for(int i = 1; i <= n; i++){
+        int sum = 0;
+        for(int j = 0; j < 3; j++){
+            sum += mdts[j][i];
         }
-        
-        for(auto [next, cost] : graph[node]){
-            if(mdt[next] > mdt[node] + cost && answer > mdt[node] + cost){
-                mdt[next] = mdt[node] + cost;
-                bfs.push(next);
-            }
-        }
+        answer = min(answer, sum);
     }
     
     return answer;
