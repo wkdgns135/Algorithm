@@ -16,14 +16,8 @@ int solution(vector<vector<int>> board) {
     vector<vector<vector<int>>> mdt(n, vector<vector<int>>(n, vector<int>(4, INT_MAX)));
     queue<tuple<int,int,int>> bfs;
     fill(mdt[0][0].begin(), mdt[0][0].end(), 0);
-    if (n > 1 && board[0][1] == 0) {
-        bfs.push({1, 0, 0});
-        mdt[0][1][0] = 100;
-    }
-    if (n > 1 && board[1][0] == 0) {
-        bfs.push({0, 1, 1});
-        mdt[1][0][1] = 100;
-    }
+    bfs.push({0,0,0});
+    bfs.push({0,0,1});
     
     static constexpr int offset[4][2] = {{0,1}, {1,0}, {0,-1}, {-1,0}};
     
