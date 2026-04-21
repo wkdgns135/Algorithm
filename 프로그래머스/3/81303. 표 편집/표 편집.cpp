@@ -4,7 +4,6 @@
 using namespace std;
 
 struct Node{
-    int index = 0;
     Node* prev = nullptr;
     Node* next = nullptr;
     bool erased = false;
