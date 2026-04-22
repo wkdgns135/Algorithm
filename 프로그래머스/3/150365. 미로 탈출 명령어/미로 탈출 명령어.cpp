@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <climits>
 
 using namespace std;
 
@@ -15,26 +14,13 @@ string solution(int n, int m, int x, int y, int r, int c, int k) {
     static constexpr char direction[4] = {'d','l','r','u'};
     string answer;
     answer.reserve(k);
-    while(distance(x, y, r, c) < k){
-        for(int i = 0; i < 4; i++){
-            int xx = x + offset[i][0];
-            int yy = y + offset[i][1];
-            if(xx >= 0 && xx < n && yy >= 0 && yy < m){
-                x = xx;
-                y = yy;
-                answer.push_back(direction[i]);
-                k--;
-                break;
-            }
-        }
-    }
 
     while(k--){
         for(int i = 0; i < 4; i++){
             int xx = x + offset[i][0];
             int yy = y + offset[i][1];
             if(xx >= 0 && xx < n && yy >= 0 && yy < m){
-                if(distance(x, y, r, c) > distance(xx, yy, r, c)){
+                if(distance(xx, yy, r, c) <= k){
                     x = xx;
                     y = yy;
                     answer.push_back(direction[i]);
